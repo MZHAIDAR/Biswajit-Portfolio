@@ -1,0 +1,556 @@
+/* =========================================================
+   Design concept: "Stratigraphy"
+   A palette and set of motifs drawn from subsurface geology —
+   sediment-layer tones, a depth-gradient timeline (newest role
+   at the "surface", earliest role deepest), and thin seismic-
+   line dividers — to match 40 years in reservoir engineering.
+========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --bg:            #0e0b09;
+  --bg-alt:        #16110d;
+  --panel:         #1b1511;
+  --text:          #f1e8dd;
+  --muted:         #a9998a;
+  --muted-dim:     #7d7064;
+
+  --amber:         #c9863f;   /* oil / surface layer */
+  --amber-dim:     #c9863f99;
+  --rust:          #8a4a2b;   /* mid strata */
+  --deep:          #4a352a;   /* deep strata */
+  --teal:          #4f8a83;   /* subsurface fluid — sparing use */
+
+  --line:          rgba(241,232,221,0.09);
+  --line-strong:   rgba(241,232,221,0.16);
+
+  --font-head:  'Space Grotesk', sans-serif;
+  --font-body:  'Inter', sans-serif;
+  --font-data:  'IBM Plex Mono', monospace;
+
+  --maxw: 760px;
+}
+
+*{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+
+body{
+  margin:0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(201,134,63,0.035) 0px,
+      rgba(201,134,63,0.035) 1px,
+      transparent 1px,
+      transparent 96px
+    );
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  *{ animation: none !important; transition: none !important; }
+}
+
+a{ color: inherit; text-decoration: none; }
+
+.wrap{
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+h1,h2,h3{
+  font-family: var(--font-head);
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+:focus-visible{
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   Header / nav
+========================================================= */
+.site-header{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(14,11,9,0.88);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 1px 0 0 rgba(201,134,63,0.15);
+}
+
+.header-inner{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.brand{
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+.site-nav{
+  display: flex;
+  gap: 28px;
+}
+
+.site-nav a{
+  color: var(--muted);
+  font-size: 0.95rem;
+  position: relative;
+  padding: 6px 0;
+  transition: color 0.2s ease;
+}
+.site-nav a:hover,
+.site-nav a:focus-visible{ color: var(--text); }
+.site-nav a::after{
+  content:"";
+  position:absolute;
+  left:0; bottom:0;
+  height:1px; width:0;
+  background: var(--amber);
+  transition: width 0.25s ease;
+}
+.site-nav a:hover::after{ width:100%; }
+
+.nav-toggle{
+  display:none;
+  flex-direction: column;
+  gap:5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+.nav-toggle span{
+  width: 22px; height: 2px;
+  background: var(--text);
+  display:block;
+}
+
+/* =========================================================
+   Hero — a cross-section of strata behind the name
+========================================================= */
+.hero{
+  position: relative;
+  padding: 110px 24px 90px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Layered sediment bands, darkest (deepest) at the bottom */
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  background:
+    linear-gradient(to bottom,
+      transparent 0%,
+      transparent 40%,
+      rgba(138,74,43,0.16) 40%,
+      rgba(138,74,43,0.16) 58%,
+      rgba(74,53,42,0.22) 58%,
+      rgba(74,53,42,0.22) 76%,
+      rgba(27,21,17,0.5) 76%,
+      rgba(27,21,17,0.5) 100%
+    );
+}
+
+/* Soft amber glow, like light through a core sample */
+.hero-blob{
+  position:absolute;
+  top:-180px; right:-120px;
+  width:460px; height:460px;
+  background: radial-gradient(circle at 35% 35%, var(--amber) 0%, transparent 68%);
+  opacity:0.22;
+  filter: blur(14px);
+  z-index:-1;
+  border-radius: 50%;
+}
+
+/* Fine contour/seismic lines drifting across the hero */
+.hero::after{
+  content:"";
+  position:absolute;
+  left:-10%; right:-10%; bottom:18%;
+  height:120px;
+  z-index:-1;
+  opacity:0.5;
+  background-image:
+    repeating-linear-gradient(
+      100deg,
+      transparent 0px,
+      transparent 38px,
+      rgba(201,134,63,0.14) 38px,
+      rgba(201,134,63,0.14) 40px
+    );
+  transform: rotate(-2deg);
+}
+
+.hero-eyebrow{
+  position:relative;
+  color: var(--amber);
+  font-family: var(--font-data);
+  font-size: 0.85rem;
+  letter-spacing: 0.01em;
+  margin: 0 0 16px;
+  opacity: 0;
+  animation: rise 0.6s ease-out 0.05s forwards;
+}
+
+.hero-name{
+  position:relative;
+  font-size: clamp(2.7rem, 7.4vw, 4.8rem);
+  line-height: 1.02;
+  margin-bottom: 22px;
+  background: linear-gradient(115deg, var(--text) 30%, var(--amber) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0;
+  animation: rise 0.7s ease-out 0.15s forwards;
+}
+
+.hero-tagline{
+  position:relative;
+  max-width: 48ch;
+  color: var(--text);
+  font-size: 1.15rem;
+  margin: 0 0 16px;
+  opacity: 0;
+  animation: rise 0.7s ease-out 0.28s forwards;
+}
+
+.hero-location{
+  position:relative;
+  color: var(--muted);
+  font-family: var(--font-data);
+  font-size: 0.85rem;
+  margin:0;
+  opacity: 0;
+  animation: rise 0.7s ease-out 0.4s forwards;
+}
+
+@keyframes rise{
+  from{ opacity:0; transform: translateY(10px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+
+/* =========================================================
+   Sections (shared) — separated by a thin seismic trace
+========================================================= */
+.section{
+  position: relative;
+  padding: 76px 0;
+  border-top: 1px solid var(--line);
+}
+
+.section::before{
+  content:"";
+  position:absolute;
+  top:-1px; left:0; right:0;
+  height:1px;
+  background: linear-gradient(90deg, transparent, var(--amber-dim) 18%, transparent 55%);
+}
+
+.section-inner h2{
+  font-size: 1.7rem;
+  margin-bottom: 30px;
+  position: relative;
+  display: inline-block;
+}
+
+.section-inner h2::after{
+  content:"";
+  display:block;
+  width: 42px;
+  height: 3px;
+  margin-top: 12px;
+  background: var(--amber);
+  border-radius: 2px;
+}
+
+.section-body p{
+  max-width: 62ch;
+  color: var(--text);
+  margin: 0 0 16px;
+}
+.section-body p:last-child{ margin-bottom:0; }
+
+/* About — narrative points read like field notes */
+.about-points{
+  list-style: none;
+  margin:0; padding:0;
+  max-width: 66ch;
+  display:flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.about-points li{
+  position: relative;
+  padding-left: 22px;
+  color: var(--text);
+}
+.about-points li::before{
+  content:"";
+  position:absolute;
+  left:0; top:0.55em;
+  width:8px; height:8px;
+  background: var(--amber);
+  transform: rotate(45deg);
+}
+
+/* =========================================================
+   Experience timeline — a depth column: amber (recent/
+   shallow) fading to deep strata brown (earliest/deepest)
+========================================================= */
+.timeline{
+  list-style: none;
+  margin:0; padding:0;
+  position: relative;
+  border-left: 2px solid transparent;
+  border-image: linear-gradient(to bottom, var(--amber), var(--rust), var(--deep)) 1 100%;
+}
+
+.timeline-item{
+  position: relative;
+  padding: 0 0 44px 32px;
+}
+.timeline-item:last-child{ padding-bottom:0; }
+
+.timeline-marker{
+  position:absolute;
+  left:-7px; top:4px;
+  width:11px; height:11px;
+  background: var(--bg);
+  border: 2px solid var(--amber);
+  transform: rotate(45deg);
+}
+.timeline-item:nth-child(n+4) .timeline-marker{ border-color: var(--rust); }
+.timeline-item:nth-child(n+8) .timeline-marker{ border-color: var(--deep); }
+
+.timeline-head{
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px 20px;
+}
+
+.timeline-head h3{
+  font-size: 1.1rem;
+}
+
+.timeline-date{
+  color: var(--muted);
+  font-family: var(--font-data);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.timeline-org{
+  color: var(--amber);
+  font-size: 0.92rem;
+  margin: 5px 0 2px;
+}
+
+.timeline-points{
+  margin: 12px 0 0;
+  padding-left: 20px;
+  color: var(--muted);
+}
+.timeline-points > li{ margin-bottom: 10px; }
+.timeline-points > li:last-child{ margin-bottom:0; }
+
+.timeline-subpoints{
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0 0 0 18px;
+  border-left: 1px solid var(--line-strong);
+  display:flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.timeline-subpoints li{ position: relative; color: var(--muted); }
+.timeline-subpoints li::before{
+  content:"–";
+  position:absolute;
+  left:-17px;
+  color: var(--muted-dim);
+}
+
+.timeline-subpoints.nested{
+  margin-top: 8px;
+  padding-left: 16px;
+  gap: 6px;
+}
+.timeline-subpoints.nested li{ font-size: 0.94rem; }
+
+/* =========================================================
+   Education
+========================================================= */
+.edu-list{
+  display:flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.edu-item{
+  padding-left: 18px;
+  border-left: 2px solid var(--rust);
+}
+
+.edu-head{
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px 20px;
+}
+
+.edu-head h3{ font-size: 1.1rem; }
+
+.edu-date{
+  color: var(--muted);
+  font-family: var(--font-data);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.edu-org{
+  color: var(--amber);
+  font-size: 0.92rem;
+  margin: 5px 0 6px;
+}
+
+.edu-note{
+  color: var(--muted);
+  margin: 0;
+}
+
+/* =========================================================
+   Contact
+========================================================= */
+.section-contact{
+  background: var(--bg-alt);
+}
+
+.contact-lede{
+  max-width: 56ch;
+  color: var(--muted);
+  margin: 0 0 32px;
+}
+
+.contact-links{
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-link{
+  display:flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 20px;
+  padding: 18px 4px;
+  border-top: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.contact-links .contact-link:last-child{
+  border-bottom: 1px solid var(--line);
+}
+
+.contact-link::before{
+  content:"";
+  position:absolute;
+  left:0; top:0; bottom:0;
+  width:3px;
+  background: var(--amber);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.25s ease;
+}
+.contact-link:hover::before,
+.contact-link:focus-visible::before{ transform: scaleY(1); }
+
+.contact-link:hover,
+.contact-link:focus-visible{ padding-left: 14px; }
+
+.contact-label{
+  font-family: var(--font-head);
+  color: var(--text);
+  font-size: 1rem;
+  position: relative;
+  transition: color 0.2s ease;
+}
+.contact-link:hover .contact-label{ color: var(--amber); }
+
+.contact-value{
+  color: var(--muted);
+  font-family: var(--font-data);
+  font-size: 0.9rem;
+  position: relative;
+}
+
+/* =========================================================
+   Footer
+========================================================= */
+.site-footer{
+  padding: 28px 0 40px;
+  background: var(--bg-alt);
+}
+.site-footer p{
+  color: var(--muted-dim);
+  font-family: var(--font-data);
+  font-size: 0.8rem;
+  margin:0;
+}
+
+/* =========================================================
+   Responsive
+========================================================= */
+@media (max-width: 640px){
+  .nav-toggle{ display:flex; }
+
+  .site-nav{
+    position: absolute;
+    top: 64px; left:0; right:0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    flex-direction: column;
+    gap: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+  }
+  .site-nav.open{ max-height: 260px; }
+  .site-nav a{
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hero{ padding: 68px 24px 60px; }
+
+  .timeline-head,
+  .edu-head{ flex-direction: column; align-items: flex-start; }
+
+  .contact-link,
+  .contact-link:hover{ flex-direction: column; gap: 4px; padding-left: 4px; }
+}
